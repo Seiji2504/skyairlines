@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reserva registrada - SKAIRO</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body{
+            font-family:"Nunito",sans-serif;
+            background:#eef4ff;
+        }
+        .page-title{
+            text-align:center;
+            margin-top:40px;
+            font-size:2.3rem;
+            font-weight:800;
+            color:#592385;
+        }
+        .card-box{
+            max-width:650px;
+            margin:40px auto;
+            background:white;
+            padding:30px;
+            border-radius:22px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.10);
+        }
+    </style>
+</head>
+<body>
+
+<h1 class="page-title">Reserva registrada correctamente ✅</h1>
+
+<div class="card-box">
+    <ul>
+        <li><b>Código PNR:</b> {{ codigo_pnr }}</li>
+        <li><b>ID Vuelo:</b> {{ id_vuelo }}</li>
+        <li><b>ID Pasajero:</b> {{ id_pasajero }}</li>
+        <li><b>Estado:</b> {{ estado }}</li>
+        <li><b>Total:</b> S/. {{ total_reserva }}</li>
+        <li><b>Fecha:</b> {{ fecha_reserva }}</li>
+    </ul>
+
+    <a href="{{ url_for('reservas') }}">Registrar otra reserva</a> |
+    <a href="{{ url_for('index') }}">Inicio</a> |
+    <a href="{{ url_for('generar_voucher', id_reserva=reserva.id_reserva) }}">Descargar Voucher</a>
+</div>
+
+<!-- modal boostrap-->
+{% if pasajero_id %}
+<div class="modal fade" id="registroModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center">
+      <div class="modal-body p-4">
+        <h4 class="mt-3" style="color:#592385; font-weight:800;">Usuario registrado</h4>
+        <p class="mt-2 mb-0" style="font-size:1rem;">
+          Su ID de pasajero es <b>{{ pasajero_id }}</b>.
+        </p>
+        <p class="text-muted mt-1 mb-3" style="font-size:0.9rem;">
+          Guarde este ID para futuras reservas.
+        </p>
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal">
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+{% if pasajero_id %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modalEl = document.getElementById('registroModal');
+        var modal = new bootstrap.Modal(modalEl);
+        modal.show();
+    });
+</script>
+{% endif %}
+
+</body>
+</html>
