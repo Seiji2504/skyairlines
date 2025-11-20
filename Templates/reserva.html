@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Reserva - SKY Airlines</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body{
+            font-family:"Nunito",sans-serif;
+            background:#eef4ff;
+        }
+
+        /* NAVBAR */
+        .header{
+            height:85px;
+            background:white;
+            box-shadow:0 4px 20px rgba(0,0,0,0.08);
+            position:sticky;
+            top:0;
+            z-index:50;
+        }
+        .navbar{
+            max-width:1200px;
+            margin:auto;
+            height:100%;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:0 1.5rem;
+        }
+        .logo{
+            font-size:1.9rem;
+            font-weight:800;
+            color:#592385;
+            letter-spacing:-1px;
+        }
+        .nav-links a{
+            margin-left:25px;
+            font-weight:600;
+            color:#592385;
+            text-decoration:none;
+            transition:.2s;
+        }
+        .nav-links a:hover{ color:#34115b; }
+
+        /* TÍTULO */
+        .page-title{
+            text-align:center;
+            margin-top:30px;
+            font-size:2.3rem;
+            font-weight:800;
+            color:#592385;
+        }
+
+        /* CARD PRINCIPAL */
+        .form-box{
+            max-width:700px;
+            margin:25px auto 50px auto;
+            background:white;
+            padding:35px;
+            border-radius:22px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.10);
+        }
+
+        label{
+            font-weight:700;
+            color:#592385;
+            margin-bottom:6px;
+        }
+
+        .input-box{
+            padding:13px;
+            border-radius:14px;
+            border:2px solid #e3e1f3;
+            width:100%;
+            background:white;
+            transition:.25s;
+        }
+        .input-box:focus{
+            border-color:#8a6cd1;
+            box-shadow:0 0 6px #c7b5ff;
+        }
+
+        /* BOTONES */
+        .btn-skairo{
+            background:#592385;
+            color:white;
+            font-weight:800;
+            padding:14px 30px;
+            border-radius:14px;
+            width:100%;
+            font-size:1.1rem;
+            transition:.25s;
+            box-shadow:0 4px 10px rgba(0,0,0,0.15);
+        }
+        .btn-skairo:hover{
+            background:#441b6d;
+            transform:translateY(-2px);
+            box-shadow:0 8px 18px rgba(0,0,0,0.2);
+        }
+
+        a{
+            color:#592385;
+            font-weight:700;
+            text-decoration:none;
+        }
+        a:hover{ color:#34115b; }
+
+        /* Caja "Ya está registrado" */
+        .lookup-box{
+            background:#f6f3ff;
+            border-radius:18px;
+            padding:18px 22px;
+            margin-bottom:25px;
+            border:1px solid #e1d9ff;
+        }
+
+        .lookup-title{
+            font-weight:800;
+            font-size:1.2rem;
+            color:#592385;
+            margin-bottom:8px;
+        }
+
+        .small-note{
+            font-size:0.85rem;
+            color:#777;
+        }
+
+        .btn-lookup{
+            background:#ffffff;
+            border:2px solid #592385;
+            color:#592385;
+            font-weight:700;
+            border-radius:12px;
+            padding:10px 18px;
+            transition:.25s;
+        }
+        .btn-lookup:hover{
+            background:#e8deff;
+        }
+
+        .lookup-msg{
+            font-size:0.9rem;
+            margin-top:6px;
+        }
+        .lookup-ok{
+            color:#2a9d8f;
+        }
+        .lookup-error{
+            color:#e63946;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="header">
+    <nav class="navbar">
+        <div class="logo">SKY</div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Inicio</a>
+            <a href="{{ url_for('estado_vuelo') }}">Estado de vuelo</a>
+        </div>
+    </nav>
+</header>
+
+<h1 class="page-title">Registrar nueva reserva ✈</h1>
+
+<div class="form-box">
+
+    <!-- BUSCAR PASAJERO EXISTENTE -->
+    <div class="lookup-box">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="lookup-title">¿Ya está registrado?</div>
+        </div>
+        <div class="row g-2">
+            <div class="col-md-9">
+                <input type="text"
+                       id="lookupInput"
+                       class="input-box"
+                       placeholder="Escriba su DNI, ID o su nombre">
+                <div id="lookupMsg" class="lookup-msg small-note"></div>
+            </div>
+            <div class="col-md-3 d-grid">
+                <button type="button" id="btnLookup" class="btn-lookup">
+                    Buscar
+                </button>
+            </div>
+        </div>
+        <div class="small-note mt-1">
+            Si se encuentra, rellenaremos automáticamente tus datos.  
+        </div>
+    </div>
+
+    <!-- FORMULARIO PRINCIPAL -->
+    <form action="{{ url_for('crear_reserva') }}" method="post" class="row g-4">
+
+        <!-- DNI -->
+        <div class="col-12">
+            <label>DNI</label>
+            <input  type="text"
+                    name="dni"
+                    id="dni"
+                    class="input-box"
+                    placeholder="Ej: 73037034"
+                    required>
+        </div>
+
+        <!-- NOMBRES / APELLIDOS -->
+        <div class="col-md-6">
+            <label>Nombres</label>
+            <input  type="text"
+                    name="nombres"
+                    id="nombres"
+                    class="input-box"
+                    placeholder="Ej: Jerumy Alexander"
+                    required>
+        </div>
+
+        <div class="col-md-6">
+            <label>Apellidos</label>
+            <input  type="text"
+                    name="apellidos"
+                    id="apellidos"
+                    class="input-box"
+                    placeholder="Ej: Espinoza Domínguez"
+                    required>
+        </div>
+
+        <!-- EMAIL / TELÉFONO -->
+        <div class="col-md-6">
+            <label>Email</label>
+            <input  type="email"
+                    name="email"
+                    id="email"
+                    class="input-box"
+                    placeholder="Ej: jerumy@example.com"
+                    required>
+        </div>
+
+        <div class="col-md-6">
+            <label>Teléfono</label>
+            <input  type="text"
+                    name="telefono"
+                    id="telefono"
+                    class="input-box"
+                    placeholder="Ej: 912345678">
+        </div>
+
+        <!-- VUELO -->
+        <div class="col-12">
+            <label>Selecciona un vuelo</label>
+            <select name="id_vuelo" class="input-box" required>
+                {% for vuelo in vuelos %}
+                <option value="{{ vuelo.id_vuelo }}">
+                    ✈ {{ vuelo.numero_vuelo }} — {{ vuelo.origen }} → {{ vuelo.destino }}
+                    | Salida: {{ vuelo.fecha_salida.strftime('%Y-%m-%d %H:%M') }}
+                    | Asientos: {{ vuelo.asientos_disponibles }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- BOTÓN -->
+        <div class="col-12">
+            <button type="submit" class="btn-skairo">Registrar Reserva</button>
+        </div>
+
+        <div class="text-center mt-2">
+            <a href="{{ url_for('index') }}">← Volver al inicio</a>
+        </div>
+
+    </form>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Buscar pasajero al hacer clic
+document.getElementById('btnLookup').addEventListener('click', buscarPasajero);
+// También al presionar Enter dentro del input
+document.getElementById('lookupInput').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+        e.preventDefault();
+        buscarPasajero();
+    }
+});
+
+function buscarPasajero(){
+    const q = document.getElementById('lookupInput').value.trim();
+    const msg = document.getElementById('lookupMsg');
+
+    if(q === ""){
+        msg.textContent = "Escribe un DNI, ID o nombre para buscar.";
+        msg.className = "lookup-msg lookup-error";
+        return;
+    }
+
+    fetch(`/api/pasajero?q=${encodeURIComponent(q)}`)
+        .then(r => r.json())
+        .then(data => {
+            if(data.found){
+                const p = data.pasajero;
+                document.getElementById('dni').value       = p.dni || "";
+                document.getElementById('nombres').value   = p.nombres || "";
+                document.getElementById('apellidos').value = p.apellidos || "";
+                document.getElementById('email').value     = p.email || "";
+                document.getElementById('telefono').value  = p.telefono || "";
+
+                msg.textContent = "Pasajero encontrado. Se han rellenado tus datos.";
+                msg.className = "lookup-msg lookup-ok";
+            }else{
+                msg.textContent = "No se encontró ningún pasajero con ese dato. Puedes registrarte como nuevo.";
+                msg.className = "lookup-msg lookup-error";
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            msg.textContent = "Ocurrió un error al buscar. Intenta nuevamente.";
+            msg.className = "lookup-msg lookup-error";
+        });
+}
+</script>
+
+</body>
+</html>
